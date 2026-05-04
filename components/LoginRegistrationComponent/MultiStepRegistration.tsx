@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
+import { set, z } from "zod";
 import {
   Card,
   CardContent,
@@ -122,8 +122,34 @@ export default function MultiStepRegistration({
   };
 
   const handleRegistration = async () => {
-    
+    setIsLoading(true);
+    let imageUrl: string | null = null;
+    if(image){
+      imageUrl = await uploadProfileImage(image);
+      if(!imageUrl){{
+        setIsLoading(false);
+        return
+      }
+    }
   };
+  const data = {
+    name, email, address, phone, password, image: imageUrl
+  }
+  try {
+    const res = await fetch('/api/user',{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
+    })
+    const resData = await res.json();
+    console.log(resData, 'DATA FROM BACKEND')
+    setIsLoading(false);
+  } catch (error) {
+    toast.error("Registration failed. Please try again.");
+    setIsLoading(false)
+  }}
 
   const goBack = () => {
     setDirection("backward");
@@ -407,9 +433,9 @@ export default function MultiStepRegistration({
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="mb-5">
+            <CardFooter className="">
               <Button
-                className="w-full bg-carPrimary text-white rounded-xs"
+                className="w-full rounded-xs"
                 onClick={handleRegistration}
                 disabled={isLoading}
               >

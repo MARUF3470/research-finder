@@ -1,15 +1,13 @@
-const PrismaClient = require('@prisma/client').PrismaClient;
+import { PrismaClient } from "@prisma/client";
 
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-let prisma;
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-
-if (!prisma) {
-    prisma = new PrismaClient();
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
 }
 
-
-const db = prisma
-
-
-module.exports = db;
+export default prisma;
