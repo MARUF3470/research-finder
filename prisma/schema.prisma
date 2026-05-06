@@ -80,3 +80,5 @@ model Result {
 
   search        Search   @relation(fields: [searchId], references: [id])
 }
+
+// database plan
