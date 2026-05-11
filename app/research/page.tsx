@@ -5,7 +5,6 @@ const Research = () => {
   return (
    <div>
      <SearchLayout />
-     <OutputLayout/>
    </div>
   )
 }
