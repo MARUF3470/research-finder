@@ -27,7 +27,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoginAlertDialoge from "./LoginAlertDialoge";
 
-
+import { signIn } from "next-auth/react";
 
 
 // Email validation schema
@@ -73,7 +73,18 @@ export default function MultiStepLogin() {
 
   // Handle login submission
   const handleLogin = async () => {
-    
+    const signInData = await signIn("credentials",{
+      email,
+      password,
+      redirect: false,
+    })
+    if (signInData?.ok) {
+     toast.success("Logged in successfully!");
+      return router.push("/");
+    }
+    if (!signInData?.ok) {
+     toast.error(signInData?.error || "Login failed. Please try again.");
+    }
   };
 
   // Go back to previous step

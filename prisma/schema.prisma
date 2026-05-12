@@ -14,6 +14,8 @@ model User {
   email         String   @unique
   password      String
   image         String?
+  address       String?
+  phone         String?
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -58,25 +60,29 @@ model Search {
 }
 
 model Result {
-  id            String   @id @default(cuid())
-  searchId      String
+  id        String @id @default(cuid())
+  searchId  String
 
-  title         String
-  authors       String
-  year          Int
-  citations     Int?
+  title     String
+  authors   String
+  year      Int
+  citations Int?
 
-  summary       String
-  methodology   String
-  keyFindings   String
-  limitations   String
-  futureWork    String
-  references    String?   // <-- IMPORTANT (you mentioned this)
+  summary       String?
+  methodology   String?
+  keyFindings   String?
+  limitations   String?
+  futureWork    String?
+  references    String?
 
-  publishedIn   String?
-  link          String
+  publishedIn String?
+  link        String @unique
 
-  createdAt     DateTime @default(now())
+  pdfUrl String?
 
-  search        Search   @relation(fields: [searchId], references: [id])
+  analysisStatus String @default("PENDING")
+
+  createdAt DateTime @default(now())
+
+  search Search @relation(fields: [searchId], references: [id])
 }
