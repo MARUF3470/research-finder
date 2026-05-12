@@ -33,6 +33,7 @@ const TableLayout = ({ papers }: { papers: Papers[] }) => {
         <div className="divide-y divide-border">
           {papers?.map((paper, index) => {
             const isExpanded = expandedRows.has(index);
+            console.log(paper, 'single paper')
             return (
               <div key={index}>
                 {/* Row Header */}

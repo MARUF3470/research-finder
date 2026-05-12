@@ -30,7 +30,8 @@ const SearchLayout = () => {
       });
       const result = await response.json()
       console.log(result, '------------------------')
-      if(response){
+      if(result){
+        setResults(result);
         setResults(result);
         setLoading(false);
       }

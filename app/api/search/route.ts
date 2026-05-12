@@ -2,7 +2,7 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { geminiModel } from "@/lib/gemini";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import PDF2Json from "pdf2json";
 
 // =========================
@@ -124,33 +124,59 @@ export async function POST(req: Request) {
     // =========================
     // SAVE RESULTS AS PENDING
     // =========================
-    const savedResults = await Promise.all(
-      papers.map(async (paper: any) => {
-        return prisma.result.create({
-          data: {
-            search: {
-              connect: {
-                id: search.id,
-              },
-            },
-            title: paper.title || "Untitled",
-            authors: paper.authors || "Unknown",
-            year: paper.published || new Date().getFullYear(),
-            citations: paper.citations || 0,
-            summary: null,
-            methodology: null,
-            keyFindings: null,
-            limitations: null,
-            futureWork: null,
-            references: null,
-            publishedIn: paper.publishedIn,
-            link: paper.link || `fallback-${crypto.randomUUID()}`,
-            pdfUrl: paper.pdfUrl,
-            analysisStatus: "PENDING",
+ const savedResults = await Promise.all(
+  papers.map(async (paper: any) => {
+    const link = paper.link || `fallback-${crypto.randomUUID()}`;
+
+    return prisma.result.upsert({
+      where: {
+        link, // the unique field
+      },
+      update: {
+        // update these fields if the record already exists
+        search: {
+          connect: {
+            id: search.id,
           },
-        });
-      }),
-    );
+        },
+        title: paper.title || "Untitled",
+        authors: paper.authors || "Unknown",
+        year: paper.published || new Date().getFullYear(),
+        citations: paper.citations || 0,
+        summary: null,
+        methodology: null,
+        keyFindings: null,
+        limitations: null,
+        futureWork: null,
+        references: null,
+        publishedIn: paper.publishedIn,
+        pdfUrl: paper.pdfUrl,
+        analysisStatus: "PENDING",
+      },
+      create: {
+        search: {
+          connect: {
+            id: search.id,
+          },
+        },
+        title: paper.title || "Untitled",
+        authors: paper.authors || "Unknown",
+        year: paper.published || new Date().getFullYear(),
+        citations: paper.citations || 0,
+        summary: null,
+        methodology: null,
+        keyFindings: null,
+        limitations: null,
+        futureWork: null,
+        references: null,
+        publishedIn: paper.publishedIn,
+        link,
+        pdfUrl: paper.pdfUrl,
+        analysisStatus: "PENDING",
+      },
+    });
+  })
+);
 
     // =========================
     // RETURN RESPONSE IMMEDIATELY
@@ -160,10 +186,16 @@ export async function POST(req: Request) {
     // =========================
     // BACKGROUND AI ANALYSIS
     // =========================
-    Promise.allSettled(
+   await Promise.allSettled(
       savedResults.map(async (savedPaper, index) => {
         const paper = papers[index];
-
+if (
+      savedPaper.analysisStatus === "COMPLETED" &&
+      savedPaper.summary !== null
+    ) {
+      console.log(`⏭️ Skipping already analyzed: "${paper.title}"`);
+      return;
+    }
         try {
           // No PDF and no abstract = nothing to analyze
           if (!paper.pdfUrl && !paper.abstract) {
