@@ -68,19 +68,21 @@ model Result {
   year      Int
   citations Int?
 
-  summary       String
-  methodology   String
-  keyFindings   String
-  limitations   String
-  futureWork    String
+  summary       String?
+  methodology   String?
+  keyFindings   String?
+  limitations   String?
+  futureWork    String?
   references    String?
 
   publishedIn String?
-  pdfUrl      String?
   link        String @unique
+
+  pdfUrl String?
+
+  analysisStatus String @default("PENDING")
 
   createdAt DateTime @default(now())
 
   search Search @relation(fields: [searchId], references: [id])
-
 }
