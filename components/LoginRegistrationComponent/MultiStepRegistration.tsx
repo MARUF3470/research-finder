@@ -144,7 +144,7 @@ export default function MultiStepRegistration({
       body: JSON.stringify(data)
     })
     const resData = await res.json();
-    console.log(resData, 'DATA FROM BACKEND')
+   
     setIsLoading(false);
   } catch (error) {
     toast.error("Registration failed. Please try again.");

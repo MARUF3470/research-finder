@@ -7,6 +7,7 @@ import { Papers } from "@/types/ResultTypes";
 
 const TableLayout = ({ papers }: { papers: Papers[] }) => {
   //  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set([1]))
+ 
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const toggleRow = (id: number) => {
     const newExpanded = new Set(expandedRows);
