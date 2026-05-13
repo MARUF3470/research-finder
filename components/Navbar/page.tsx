@@ -3,6 +3,8 @@ import { Button } from "../ui/button"
 import Link from "next/link"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import SignOut from "../LoginRegistrationComponent/SignOut";
+import DropDownMenu from "./DropDownMenu";
 
 const NavBar = async() => {
 const session  = await getServerSession(authOptions);
@@ -14,7 +16,11 @@ const session  = await getServerSession(authOptions);
               {
                 session?.user ? (
                   <div className="flex items-center gap-4">
-                    <span className="text-sm">Welcome, {session.user.name}</span>
+                    <div className="flex items-center">
+                      <span className="text-sm">Welcome, {session.user.name}</span>
+                    <DropDownMenu/>
+                    </div>
+                   <SignOut/>
                   </div>
                 ) : (
                   <Link href='/authentication'><Button variant="default" className='px-8 py-5'>Sign In</Button></Link>
