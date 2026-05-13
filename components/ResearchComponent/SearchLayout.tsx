@@ -21,7 +21,7 @@ const SearchLayout = () => {
   const handleSearch = async (data: Inputs) => {
     setLoading(true);
     try {
-      const response = await fetch("api/search", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/search`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

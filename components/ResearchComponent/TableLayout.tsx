@@ -54,7 +54,7 @@ const TableLayout = ({ papers }: { papers: Papers[] }) => {
                     </span>
                   </div>
                   <div className="text-muted-foreground">{paper.authors}</div>
-                  <div className="text-muted-foreground">{paper.published}</div>
+                  <div className="text-muted-foreground">{paper.year}</div>
                   <div className="text-muted-foreground">{paper.citations}</div>
                   <div>
                     <a

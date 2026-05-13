@@ -102,7 +102,7 @@ export default function MultiStepRegistration({
     const formData = new FormData();
     formData.append("image", image);
     try {
-      const res = await fetch("/api/profileImage", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/profileImage`, {
         method: "POST",
         body: formData,
       });
@@ -136,7 +136,7 @@ export default function MultiStepRegistration({
     name, email, address, phone, password, image: imageUrl
   }
   try {
-    const res = await fetch('/api/user',{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user`,{
       method: "POST",
       headers: {
         "Content-Type": "application/json",

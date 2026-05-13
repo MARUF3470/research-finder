@@ -1,17 +1,15 @@
-import { Query } from "pg";
-
 export type Papers = {
   title: string,
   authors: string,
-  published: number,
-  citations?: number,
-  summary: string,
-  methodology: string,
-  keyFindings: string,
-  limitations: string,
-  futureWork: string,
-  references?: string,
-  publishedIn?: string,
+  year: number,
+  citations?: number | null,
+  summary: string | null,
+  methodology: string | null,
+  keyFindings: string | null,
+  limitations: string | null,
+  futureWork: string | null,
+  references?: string | null,
+  publishedIn?: string | null,
   link: string
 };
 
